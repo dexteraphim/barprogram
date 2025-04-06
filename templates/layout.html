@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barprogram</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('transactions') }}">Afregn</a>
+        <a href="{{ url_for('members') }}">Medlemsliste</a>
+    </nav>
+{% block content %}
+<p>Nothing here...</p>
+{% endblock %}
+</body>
+</html>

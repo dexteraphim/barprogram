@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1>Medlemsliste</h1>
+    <ul>
+        {% for member in members %}
+            <li><strong>{{member.id}}</strong> {{member.nickname}}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
