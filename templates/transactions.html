@@ -4,27 +4,34 @@
 
     <h3>Indsæt penge</h3>
     <form method="POST" action="/deposit">
-        {{ DepositForm.hidden_tag() }}
+        {{ TransactionForm.hidden_tag() }}
         <div class="form-field">
-            {{ DepositForm.member.label }}
-            {{ DepositForm.member(autofocus=True) }}
-            {% if DepositForm.member.errors %}
+            {{ TransactionForm.member(autofocus=True) }}
+            {% if TransactionForm.member.errors %}
             <ul class="form-errors">
-                {% for error in DepositForm.member.errors %} <li>{{ error }}</li> {% endfor %} 
+                {% for error in TransactionForm.member.errors %} <li>{{ error }}</li> {% endfor %} 
             </ul>
             {% endif %}
         </div>
         <div class="form-field">
-            {{ DepositForm.amount.label }}
-            {{ DepositForm.amount }}
-            {% if DepositForm.amount.errors %}
+            {{ TransactionForm.deposit.label }}
+            {{ TransactionForm.deposit(value=0) }}
+            {% if TransactionForm.deposit.errors %}
             <ul class="form-errors">
-                {% for error in DepositForm.amount.errors %} <li>{{ error }}</li> {% endfor %} 
+                {% for error in TransactionForm.deposit.errors %} <li>{{ error }}</li> {% endfor %} 
+            </ul>
+            {% endif %}
+        <div class="form-field">
+            {{ TransactionForm.pay.label }}
+            {{ TransactionForm.pay(value=0) }}
+            {% if TransactionForm.pay.errors %}
+            <ul class="form-errors">
+                {% for error in TransactionForm.pay.errors %} <li>{{ error }}</li> {% endfor %} 
             </ul>
             {% endif %}
         </div>
         <div class="form-field">
-            {{ DepositForm.submit(class="submit-button")}}
+            {{ TransactionForm.submit(class="submit-button")}}
         </div>
     </form>
 {% endblock %}

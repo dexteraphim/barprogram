@@ -4,7 +4,7 @@ import os
 from flask import Flask, render_template, url_for, redirect, flash
 from extensions import db
 from models import Member
-from forms import RegistrationForm, DepositForm
+from forms import RegistrationForm, TransactionForm
 
 app = Flask(__name__, static_folder = 'static', template_folder = 'templates', instance_path = r'C:\Users\Bar\Desktop\Barprogram')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -27,7 +27,7 @@ def transactions():
     # new_member = Member(id=90110, nickname='Dexter')
     # db.session.add(new_member)
     # db.session.commit()
-    return render_template('transactions.html', DepositForm=DepositForm())
+    return render_template('transactions.html', TransactionForm=TransactionForm())
 
 @app.route('/members')
 def members():
@@ -71,15 +71,17 @@ def delete_member(member_id):
 
 @app.post('/deposit')
 def deposit():
-    form = DepositForm()
+    form = TransactionForm()
     if form.validate_on_submit():
         member = form.member.data
-        amount = form.amount.data
+        deposit = form.deposit.data
+        pay = form.pay.data
         if member:
             try:
-                member.balance += abs(amount)
+                member.balance += deposit
+                member.balance -= pay
                 db.session.commit()
-                print(f"Tilføjede {amount} kroner på {member.nickname} ({member.id})s barkonto.")
+                print(f"{member.nickname} ({member.id}) blev afregnet.")
             except Exception as e:
                 db.session.rollback()
                 print(f'Fejl i transaktionen: {e}')

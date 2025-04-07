@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, PasswordField, SubmitField
 from wtforms_sqlalchemy.fields import QuerySelectField
-from wtforms.validators import DataRequired, Length, Regexp
+from wtforms.validators import DataRequired, Optional, Length, Regexp, NumberRange
 from models import Member
 from extensions import db
 
@@ -15,13 +15,14 @@ class RegistrationForm(FlaskForm):
 def member_label(member):
     return f'({member.id}) {member.nickname}'
 
-class DepositForm(FlaskForm):
+class TransactionForm(FlaskForm):
     member = QuerySelectField('Medlem',
     validators=[DataRequired()],
     query_factory=lambda: db.session.execute(db.select(Member).order_by(Member.id)).scalars(),
     get_label=member_label,
     allow_blank=True,
-    blank_text='-- Vælg et medlem --'
+    blank_text='Vælg et medlem'
     )
-    amount = IntegerField('Beløb', validators=[DataRequired()])
-    submit = SubmitField('Indsæt')
+    deposit = IntegerField('Indsæt', validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
+    pay = IntegerField('Betal', validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
+    submit = SubmitField('Afregn')
