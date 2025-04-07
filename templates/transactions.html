@@ -8,17 +8,14 @@
 
         {# --- Alpine.js Component Scope --- #}
         <div x-data="{
-            currentBalance: 0,  {# Initial balance - updated via script #}
-            depositAmount: {{ TransactionForm.deposit.data or 0 }}, {# Initialize from form data #}
-            payAmount: {{ TransactionForm.pay.data or 0 }},       {# Initialize from form data #}
+            currentBalance: 0,
+            depositAmount: {{ TransactionForm.deposit.data or 0 }},
+            payAmount: {{ TransactionForm.pay.data or 0 }},
 
-            // Method to update the current balance
             updateCurrentBalance(newBalance) {
                 this.currentBalance = parseInt(newBalance || 0);
-                console.log('Updated currentBalance via method to:', this.currentBalance); // Log inside method
             },
 
-            // Computed property for new balance
             get newBalance() {
                 const balance = parseInt(this.currentBalance) || 0;
                 const deposit = parseInt(this.depositAmount) || 0;
@@ -26,60 +23,47 @@
                 return balance + deposit - pay;
             }
         }">
-
-            {# Member Selection (Enhanced by Choices.js below) #}
             <div class="form-field mb-3">
                 {{ TransactionForm.member.label(class_='form-label') }} <br>
                 {{ TransactionForm.member(autofocus=True, class_='form-control') }}
                 <p class="mt-1">Nuværende Saldo: <strong x-text="currentBalance"></strong> kr</p>
             </div>
 
-            {# Deposit Field #}
             <div class="form-field mb-2">
                 {{ TransactionForm.deposit.label(class_='form-label') }} <br>
                 {{ TransactionForm.deposit(class_='form-control', **{'x-model.number': 'depositAmount'}) }}
             </div>
 
-            {# Pay Field #}
             <div class="form-field mb-3">
                 {{ TransactionForm.pay.label(class_='form-label') }} <br>
                 {{ TransactionForm.pay(class_='form-control', **{'x-model.number': 'payAmount'}) }}
             </div>
 
-            {# New Balance Preview #}
             <div class="form-field mb-4">
-                <p>Ny Saldo (Preview):
+                <p>Ny Saldo:
                     <strong x-text="newBalance"
                             :class="{ 'text-danger': newBalance < 0, 'text-success': newBalance >= 0 }">
                     </strong> kr
                 </p>
             </div>
 
-             {# Submit Button #}
             <div class="form-field">
-                {{ TransactionForm.submit(class="btn btn-primary") }}
+                {{ TransactionForm.submit }}
             </div>
 
-        </div> {# --- End Alpine.js Component Scope --- #}
+        </div>
     </form>
-
-    {# Basic CSS for text color (adapt or use a framework like Bootstrap/Tailwind) #}
     <style>
-        .text-danger { color: red; }
-        .text-success { color: green; }
-        .form-label { font-weight: bold; display: inline-block; margin-bottom: .5rem; }
-        .form-control { display: block; width: 100%; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; color: #495057; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; border-radius: .25rem; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; box-sizing: border-box; }
-        .btn { display: inline-block; font-weight: 400; text-align: center; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
-        .btn-primary { color: #fff; background-color: #007bff; border-color: #007bff; }
-        .mb-2 { margin-bottom: .5rem !important; }
-        .mb-3 { margin-bottom: 1rem !important; }
-        .mb-4 { margin-bottom: 1.5rem !important; }
-        .mt-1 { margin-top: .25rem !important; }
+        .text-danger {
+            color: red;
+        }
+        .text-success {
+            color: lightgreen;
+        }
     </style>
-
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const memberSelectElement = document.getElementById('member'); // Default ID for 'member' field
+        const memberSelectElement = document.getElementById('member');
 
         if (memberSelectElement) {
             const choices = new Choices(memberSelectElement, {
@@ -91,60 +75,52 @@
                 placeholderValue: 'Søg på medlem...',
             });
 
-            // Update Alpine state on member change
             memberSelectElement.addEventListener('change', function(event) {
-                // Find the Alpine data stack associated with the select element
                 let alpineDataStack = Alpine.closestDataStack(memberSelectElement);
-                // The actual data object is usually the first item in the stack
                 let alpineComponent = alpineDataStack && alpineDataStack.length > 0 ? alpineDataStack[0] : null;
-
 
                 if (alpineComponent) {
                     let selectedValue = event.target.value;
 
                     if (selectedValue) {
-                        fetch(`/member/${selectedValue}/balance`) // Use the endpoint path you created
+                        fetch(`/member/${selectedValue}/balance`)
                             .then(response => {
                                 if (!response.ok) {
                                     console.error(`Error fetching balance: ${response.status} ${response.statusText}`);
                                     return response.json().then(err => { throw new Error(err.error || 'API error'); });
                                 }
-                                return response.json(); // Parse JSON body
+                                return response.json();
                              })
                             .then(data => {
-                                console.log("Fetched data:", data); // Log 1
+                                console.log("Fetched data:", data);
 
                                 if (data.balance !== undefined) {
                                      const newBalanceValue = data.balance;
-                                     console.log("Parsed balance (intended):", parseInt(newBalanceValue || 0)); // Log 2
+                                     console.log("Parsed balance (intended):", parseInt(newBalanceValue || 0));
 
-                                     // --- Call the method on the correct component object ---
                                      if (typeof alpineComponent.updateCurrentBalance === 'function') {
-                                         alpineComponent.updateCurrentBalance(newBalanceValue); // Call the method defined in x-data
+                                         alpineComponent.updateCurrentBalance(newBalanceValue);
                                      } else {
                                          console.error("updateCurrentBalance method not found on Alpine component data", alpineComponent);
                                      }
-                                     // --- End method call ---
 
                                 } else {
                                      console.error("Balance key not found in API response:", data);
                                      if (typeof alpineComponent.updateCurrentBalance === 'function') {
-                                         alpineComponent.updateCurrentBalance(0); // Use method to reset
+                                         alpineComponent.updateCurrentBalance(0);
                                      }
                                 }
                             })
                             .catch(error => {
-                                // Handle fetch errors (network issues, JSON parsing errors)
                                 console.error('Error during fetch or processing:', error);
                                 if (typeof alpineComponent.updateCurrentBalance === 'function') {
-                                    alpineComponent.updateCurrentBalance(0); // Use method to reset
+                                    alpineComponent.updateCurrentBalance(0);
                                 }
                             });
 
                     } else {
-                        // No member selected
                         if (typeof alpineComponent.updateCurrentBalance === 'function') {
-                             alpineComponent.updateCurrentBalance(0); // Use method to reset
+                             alpineComponent.updateCurrentBalance(0);
                         }
                         console.log("Selection cleared, balance reset to 0");
                     }
@@ -153,8 +129,6 @@
                 }
             });
 
-            // Optional: Trigger initial fetch if a member is pre-selected
-            // (e.g., on form reload after validation error)
             if (memberSelectElement.value) {
                  memberSelectElement.dispatchEvent(new Event('change'));
             }
