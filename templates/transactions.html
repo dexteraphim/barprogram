@@ -7,31 +7,35 @@
         {{ TransactionForm.hidden_tag() }}
         <div class="form-field">
             {{ TransactionForm.member(autofocus=True) }}
-            {% if TransactionForm.member.errors %}
-            <ul class="form-errors">
-                {% for error in TransactionForm.member.errors %} <li>{{ error }}</li> {% endfor %} 
-            </ul>
-            {% endif %}
         </div>
         <div class="form-field">
             {{ TransactionForm.deposit.label }}
-            {{ TransactionForm.deposit(value=0) }}
-            {% if TransactionForm.deposit.errors %}
-            <ul class="form-errors">
-                {% for error in TransactionForm.deposit.errors %} <li>{{ error }}</li> {% endfor %} 
-            </ul>
-            {% endif %}
+            {{ TransactionForm.deposit(**{'x-model.number': 'depositAmount'}) }}
         <div class="form-field">
             {{ TransactionForm.pay.label }}
-            {{ TransactionForm.pay(value=0) }}
-            {% if TransactionForm.pay.errors %}
-            <ul class="form-errors">
-                {% for error in TransactionForm.pay.errors %} <li>{{ error }}</li> {% endfor %} 
-            </ul>
-            {% endif %}
+            {{ TransactionForm.pay(**{'x-model.number': 'payAmount'}) }}
         </div>
         <div class="form-field">
             {{ TransactionForm.submit(class="submit-button")}}
         </div>
     </form>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the ID WTForms assigns (inspect element if unsure, usually the field name)
+        const memberSelectElement = document.getElementById('member'); // Assuming your field name is 'member'
+
+        if (memberSelectElement) {
+            const choices = new Choices(memberSelectElement, {
+                // --- Optional configurations ---
+                searchEnabled: true,
+                placeholder: true,
+                removeItemButton: true,
+                itemSelectText: 'Select',
+                shouldSort: false,
+                searchResultLimit: 10,
+                placeholderValue: 'Søg på medlem',
+            });
+        }
+    }) 
+    </script>
 {% endblock %}

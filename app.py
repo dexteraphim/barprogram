@@ -1,7 +1,7 @@
 import webview
 import threading
 import os
-from flask import Flask, render_template, url_for, redirect, flash
+from flask import Flask, render_template, url_for, redirect, flash, jsonify
 from extensions import db
 from models import Member
 from forms import RegistrationForm, TransactionForm
@@ -88,6 +88,14 @@ def deposit():
         else:
             print(f'Medlemsnummer {member.id} blev ikke fundet i databasen.')
     return redirect(url_for('members'))
+
+@app.route('/member/<int:member_id>/balance')
+def get_member_balance(member_id):
+    member = db.session.get(Member, member_id)
+    if member:
+        return jsonify({'balance': member.balance})
+    else:
+        return jsonify({'error': 'Member not found'}), 404
 
 if __name__ == '__main__':
     threading.Thread(target=start_flask, daemon=True).start()

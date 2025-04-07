@@ -13,16 +13,15 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Opret')
 
 def member_label(member):
-    return f'({member.id}) {member.nickname}'
+    return f'{member.id} {member.nickname}'
 
 class TransactionForm(FlaskForm):
     member = QuerySelectField('Medlem',
     validators=[DataRequired()],
     query_factory=lambda: db.session.execute(db.select(Member).order_by(Member.id)).scalars(),
     get_label=member_label,
-    allow_blank=True,
-    blank_text='Vælg et medlem'
+    allow_blank=False
     )
-    deposit = IntegerField('Indsæt', validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
-    pay = IntegerField('Betal', validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
+    deposit = IntegerField('Indsæt', default=0, render_kw={'step': 5}, validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
+    pay = IntegerField('Betal', default=0, render_kw={'step': 5}, validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
     submit = SubmitField('Afregn')
