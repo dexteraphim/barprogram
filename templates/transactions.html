@@ -1,9 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <h1>Afregn</h1>
-
-    <h3>Indsæt penge / Betal</h3>
-    <form method="POST" action="{{ url_for('deposit') }}"> {# Ensure action points to the correct endpoint #}
+    <h1>Afregning</h1>
+    <form method="POST" action="{{ url_for('transaction') }}"> {# Ensure action points to the correct endpoint #}
         {{ TransactionForm.hidden_tag() }}
 
         {# --- Alpine.js Component Scope --- #}
@@ -55,7 +53,7 @@
     </form>
     <style>
         .text-danger {
-            color: red;
+            color: crimson;
         }
         .text-success {
             color: lightgreen;
@@ -68,11 +66,10 @@
         if (memberSelectElement) {
             const choices = new Choices(memberSelectElement, {
                 searchEnabled: true,
-                placeholder: true,
-                removeItemButton: true,
-                itemSelectText: 'Select',
+                placeholder: false,
+                removeItemButton: false,
+                itemSelectText: 'Vælg',
                 shouldSort: false,
-                placeholderValue: 'Søg på medlem...',
             });
 
             memberSelectElement.addEventListener('change', function(event) {
@@ -135,4 +132,73 @@
         }
     });
     </script>
+    <style>
+
+        button {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+    
+        .form-field {
+            padding: 0.1rem 0.5rem;
+            margin: 0.5rem;
+        }
+        input {
+            font-size: 1.25rem;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid darkgray;
+            background: #eee;
+        }
+
+        input:hover {
+            background: white;
+        }
+
+        input[type=submit] {
+            background-color: cornflowerblue;
+            border: 0;
+            font-weight: 600;
+            box-sizing: border-box;
+            padding: 1rem;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        input[type=submit]:hover {
+            cursor: pointer;
+            background-color: rgb(120, 160, 240);
+        }
+    
+        label, input, p {
+            width: 37ch;
+        }
+        div.choices {
+            font-size: 1.25rem;
+            border: 0;
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            width: 100%;
+            color: #444;
+        }
+
+        div.choices__inner {
+            font-size: 1.25rem;
+            box-sizing: border-box !important;
+            width: 100%;
+            border: 1px solid darkgrey;
+            border-radius: 0.5rem;
+            background: #eee;
+        }
+
+        div.choices__inner:hover {
+            background-color: white;
+        }
+
+        div.choices > * {
+            border-radius: 0.5rem !important;
+        }
+    </style>
 {% endblock %}

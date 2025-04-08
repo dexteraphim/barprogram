@@ -24,4 +24,4 @@ class TransactionForm(FlaskForm):
     )
     deposit = IntegerField('Indsæt', default=0, render_kw={'step': 5}, validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
     pay = IntegerField('Betal', default=0, render_kw={'step': 5}, validators=[Optional(), NumberRange(min=0, message="Beløbet skal være positivt.")])
-    submit = SubmitField('Afregn')
+    submit = SubmitField('Gennemfør')

@@ -24,9 +24,6 @@ def index():
 
 @app.route('/transactions')
 def transactions():
-    # new_member = Member(id=90110, nickname='Dexter')
-    # db.session.add(new_member)
-    # db.session.commit()
     return render_template('transactions.html', TransactionForm=TransactionForm())
 
 @app.route('/members')
@@ -34,6 +31,14 @@ def members():
     members = Member.query.all()
     return render_template('members.html', members=members, RegistrationForm=RegistrationForm())
 
+@app.route('/log')
+def log():
+    return render_template('log.html')
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+    
 # FORMULARER
 @app.post('/register')
 def register():
@@ -69,8 +74,8 @@ def delete_member(member_id):
         print(f'Medlemsnummer {member_id} blev ikke fundet i databasen.')
     return redirect(url_for('members'))
 
-@app.post('/deposit')
-def deposit():
+@app.post('/transaction')
+def transaction():
     form = TransactionForm()
     if form.validate_on_submit():
         member = form.member.data
@@ -87,7 +92,7 @@ def deposit():
                 print(f'Fejl i transaktionen: {e}')
         else:
             print(f'Medlemsnummer {member.id} blev ikke fundet i databasen.')
-    return redirect(url_for('members'))
+    return redirect(url_for('transactions'))
 
 @app.route('/member/<int:member_id>/balance')
 def get_member_balance(member_id):
@@ -99,5 +104,5 @@ def get_member_balance(member_id):
 
 if __name__ == '__main__':
     threading.Thread(target=start_flask, daemon=True).start()
-    webview.create_window("Barprogram", "http://127.0.0.1:5000")
+    webview.create_window("Barprogram", "http://127.0.0.1:5000", width=640, height=780)
     webview.start()

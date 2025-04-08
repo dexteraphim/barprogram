@@ -1,0 +1,90 @@
+* {
+    font-family: Cascadia Code;
+}
+
+a {
+    color: cornflowerblue;
+}
+
+a:hover {
+    color: rgb(120, 160, 240)
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #111;
+    color: #eee;
+}
+
+header {
+    font-size: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    border-bottom: 0.1rem solid #eee;
+ }
+ nav a {
+    border: 0.1rem solid #eee;
+    border-top: 0;
+    flex-grow: 1;
+    padding: 0.5rem 0;
+    text-align: center;
+    text-decoration: none;
+    color: #eee;
+ }
+
+ nav a:first-child {
+    border-left: 0;
+ }
+
+nav a:last-child {
+    border-right: 0;
+}
+
+ nav a:hover {
+    background: white;
+    color: #111;
+    cursor: pointer;
+ }
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.25rem;
+}
+
+h1 {
+    font-family: 'Darker Grotesque', sans-serif;
+    font-weight: 300;
+    font-size: 3rem;
+    color: white;
+}
+
+footer {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    position: absolute;
+    bottom: 0;
+    padding: 1rem 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0.1rem;
+    width: auto;
+    text-align: center;
+}

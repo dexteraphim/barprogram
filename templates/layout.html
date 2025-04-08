@@ -7,17 +7,23 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <link rel="stylesheet" href="{{url_for('static', filename='layout.css')}}">
 </head>
-<body>
-    <nav>
-        <a href="{{ url_for('transactions') }}">Afregn</a>
-        <a href="{{ url_for('members') }}">Medlemsliste</a>
-    </nav>
-{% block content %}
-<p>Nothing here...</p>
-{% endblock %}
+<body class="content">
+    <header>
+        <nav>
+            <a href="{{ url_for('transactions') }}">Afregning</a>
+            <a href="{{ url_for('members') }}">Medlemsliste</a>
+            <a href="{{ url_for('log') }}">Transaktioner</a>
+            <a href="{{ url_for('settings') }}">Indstillinger</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 <footer>
-    <p><a href="https://github.com/dexteraphim/barprogram" target="_blank">Barprogram</a> | Copyright &copy; 2025 <a href="https://github.com/dexteraphim" target="_blank">Dexter</a> - Alle rettigheder forbeholdes</p>
+    <p>Copyright &copy; 2025 <a href="https://github.com/dexteraphim" target="_blank">Dexter</a></p>
+    <p>Alle rettigheder forbeholdes</p>
 </footer>
 </body>
 </html>

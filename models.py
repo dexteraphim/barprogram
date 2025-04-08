@@ -21,8 +21,8 @@ class Member(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     member = db.Column(db.String)
-    deposit = db.Column(db.Integer)
-    pay = db.Column(db.Integer)
+    deposit = db.Column(db.Integer, nullable=False, default=0)
+    pay = db.Column(db.Integer, nullable=False, default=0)
     balance_before = db.Column(db.Integer, nullable=False)
     balance_after = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, default=func.now(), nullable=False)
