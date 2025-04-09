@@ -9,6 +9,10 @@ class Member(db.Model):
     authorized = db.Column(db.Boolean, nullable=False, default=False)
     balance = db.Column(db.Integer(), nullable=False, default=0)
 
+    # Relationships
+    transactions = db.relationship("Transaction", backref="member", lazy=True)
+
+    # Methods
     def set_pincode(self, pincode):
         self.pincode = generate_password_hash(pincode)
 
@@ -20,9 +24,7 @@ class Member(db.Model):
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    member = db.Column(db.String)
+    member_id = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
     deposit = db.Column(db.Integer, nullable=False, default=0)
     pay = db.Column(db.Integer, nullable=False, default=0)
-    balance_before = db.Column(db.Integer, nullable=False)
-    balance_after = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, default=func.now(), nullable=False)

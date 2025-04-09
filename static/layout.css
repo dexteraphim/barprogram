@@ -6,10 +6,6 @@ a {
     color: cornflowerblue;
 }
 
-a:hover {
-    color: rgb(120, 160, 240)
-}
-
 body {
     margin: 0;
     padding: 0;

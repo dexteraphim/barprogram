@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barprogram</title>
-    <script src="//unpkg.com/alpinejs" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <script src="{{url_for('static', filename='choices.js')}}"></script>
+    <script src="{{url_for('static', filename='alpine.js')}}" defer></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='choices.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='layout.css')}}">
 </head>
 <body class="content">
@@ -14,7 +14,7 @@
         <nav>
             <a href="{{ url_for('transactions') }}">Afregning</a>
             <a href="{{ url_for('members') }}">Medlemsliste</a>
-            <a href="{{ url_for('log') }}">Transaktioner</a>
+            <a href="{{ url_for('sales') }}">Barsalg</a>
             <a href="{{ url_for('settings') }}">Indstillinger</a>
         </nav>
     </header>

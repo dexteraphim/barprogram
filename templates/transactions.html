@@ -18,13 +18,13 @@
                 const balance = parseInt(this.currentBalance) || 0;
                 const deposit = parseInt(this.depositAmount) || 0;
                 const pay = parseInt(this.payAmount) || 0;
-                return balance + deposit - pay;
+                return (balance + deposit - pay);
             }
         }">
             <div class="form-field mb-3">
                 {{ TransactionForm.member.label(class_='form-label') }} <br>
                 {{ TransactionForm.member(autofocus=True, class_='form-control') }}
-                <p class="mt-1">Nuværende Saldo: <strong x-text="currentBalance"></strong> kr</p>
+                <p class="mt-1">Nuværende saldo: <strong x-text="currentBalance"></strong> kr</p>
             </div>
 
             <div class="form-field mb-2">
@@ -38,10 +38,10 @@
             </div>
 
             <div class="form-field mb-4">
-                <p>Ny Saldo:
-                    <strong x-text="newBalance"
+                <p>Ny saldo:
+                    <strong x-text="newBalance + ' kr'"
                             :class="{ 'text-danger': newBalance < 0, 'text-success': newBalance >= 0 }">
-                    </strong> kr
+                    </strong>
                 </p>
             </div>
 
@@ -169,7 +169,7 @@
 
         input[type=submit]:hover {
             cursor: pointer;
-            background-color: rgb(120, 160, 240);
+            filter: brightness(120%);
         }
     
         label, input, p {

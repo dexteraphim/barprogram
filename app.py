@@ -3,7 +3,7 @@ import threading
 import os
 from flask import Flask, render_template, url_for, redirect, flash, jsonify
 from extensions import db
-from models import Member
+from models import Member, Transaction
 from forms import RegistrationForm, TransactionForm
 
 app = Flask(__name__, static_folder = 'static', template_folder = 'templates', instance_path = r'C:\Users\Bar\Desktop\Barprogram')
@@ -31,9 +31,10 @@ def members():
     members = Member.query.all()
     return render_template('members.html', members=members, RegistrationForm=RegistrationForm())
 
-@app.route('/log')
-def log():
-    return render_template('log.html')
+@app.route('/sales')
+def sales():
+    transactions = Transaction.query.order_by(Transaction.timestamp.desc()).all()
+    return render_template('sales.html', transactions=transactions)
 
 @app.route('/settings')
 def settings():
@@ -85,6 +86,8 @@ def transaction():
             try:
                 member.balance += deposit
                 member.balance -= pay
+                transaction = Transaction(member_id=member.id, deposit=deposit, pay=pay)
+                db.session.add(transaction)
                 db.session.commit()
                 print(f"{member.nickname} ({member.id}) blev afregnet.")
             except Exception as e:
@@ -100,7 +103,7 @@ def get_member_balance(member_id):
     if member:
         return jsonify({'balance': member.balance})
     else:
-        return jsonify({'error': 'Member not found'}), 404
+        return jsonify({'error': f'Medlemsnummer {member.id} blev ikke fundet i databasen.'}), 404
 
 if __name__ == '__main__':
     threading.Thread(target=start_flask, daemon=True).start()

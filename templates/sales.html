@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1>Barsalg</h1>
+    <ul>
+        {% for transaction in transactions %}
+        <li>{{transaction.member.nickname}} {{transaction.deposit}} {{transaction.pay}} {{transaction.timestamp}}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
