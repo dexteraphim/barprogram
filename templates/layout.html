@@ -8,13 +8,14 @@
     <script src="{{url_for('static', filename='alpine.js')}}" defer></script>
     <link rel="stylesheet" href="{{url_for('static', filename='choices.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='layout.css')}}">
+    {% block dependencies %}{% endblock %}
 </head>
 <body class="content">
     <header>
         <nav>
             <a href="{{ url_for('transactions') }}">Afregning</a>
-            <a href="{{ url_for('members') }}">Medlemsliste</a>
             <a href="{{ url_for('sales') }}">Barsalg</a>
+            <a href="{{ url_for('members') }}">Medlemsliste</a>
             <a href="{{ url_for('settings') }}">Indstillinger</a>
         </nav>
     </header>

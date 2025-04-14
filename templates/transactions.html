@@ -1,10 +1,9 @@
 {% extends 'layout.html' %}
 {% block content %}
     <h1>Afregning</h1>
-    <form method="POST" action="{{ url_for('transaction') }}"> {# Ensure action points to the correct endpoint #}
+    <form method="POST" action="{{ url_for('transaction') }}">
         {{ TransactionForm.hidden_tag() }}
 
-        {# --- Alpine.js Component Scope --- #}
         <div x-data="{
             currentBalance: 0,
             depositAmount: {{ TransactionForm.deposit.data or 0 }},
@@ -23,8 +22,8 @@
         }">
             <div class="form-field mb-3">
                 {{ TransactionForm.member.label(class_='form-label') }} <br>
-                {{ TransactionForm.member(autofocus=True, class_='form-control') }}
-                <p class="mt-1">Nuværende saldo: <strong x-text="currentBalance"></strong> kr</p>
+                {{ TransactionForm.member(autofocus=True, class_='form-control', data_choice_value=member.id if member else None) }}
+                <p class="mt-1">Nuværende saldo: <span x-text="currentBalance + ' kr'"></span></p>
             </div>
 
             <div class="form-field mb-2">
@@ -133,7 +132,6 @@
     });
     </script>
     <style>
-
         button {
             margin: 0;
             padding: 0;

@@ -1,10 +1,29 @@
 {% extends 'layout.html' %}
+{% block dependencies %}
+<link rel="stylesheet" href="{{url_for('static', filename='sales.css')}}">
+{% endblock %}
 {% block content %}
     <h1>Barsalg</h1>
-    <ul>
-        {% for transaction in transactions %}
-        <li>{{transaction.member.nickname}} {{transaction.deposit}} {{transaction.pay}} {{transaction.timestamp}}</li>
-        {% endfor %}
-    </ul>
-
+    <table>
+        <thead>
+            <tr>
+                <th>Medlem</th>
+                <th>Indsat</th>
+                <th>Betalt</th>
+                <th>Tidspunkt</th>
+                <th>Barvagt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{transaction.member.nickname}}</td>
+                    <td>{{transaction.deposit}} kr</td>
+                    <td>{{transaction.pay}} kr</td>
+                    <td>{{format_datetime(transaction.timestamp, 'dd/MM HH:mm')}}</td>
+                    <td>---</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

@@ -2,6 +2,7 @@ import webview
 import threading
 import os
 from flask import Flask, render_template, url_for, redirect, flash, jsonify
+from flask_babel import Babel, format_datetime
 from extensions import db
 from models import Member, Transaction
 from forms import RegistrationForm, TransactionForm
@@ -9,7 +10,10 @@ from forms import RegistrationForm, TransactionForm
 app = Flask(__name__, static_folder = 'static', template_folder = 'templates', instance_path = r'C:\Users\Bar\Desktop\Barprogram')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = os.urandom(24)
-
+app.config['BABEL_DEFAULT_LOCALE'] = 'da_DK'
+app.config['BABEL_DEFAULT_TIMEZONE'] = 'Europe/Copenhagen'
+app.jinja_env.globals['format_datetime'] = format_datetime
+babel = Babel(app)
 db.init_app(app)
 
 with app.app_context():
@@ -26,10 +30,18 @@ def index():
 def transactions():
     return render_template('transactions.html', TransactionForm=TransactionForm())
 
+@app.route('/transactions/<member_id>')
+def member_transaction(member_id):
+    member = db.session.get(Member, member_id)
+    form = TransactionForm()
+    if member:
+        form.member.data = member
+    return render_template('transactions.html', TransactionForm=form, member=member)
+
 @app.route('/members')
 def members():
     members = Member.query.all()
-    return render_template('members.html', members=members, RegistrationForm=RegistrationForm())
+    return render_template('members.html', members=members)
 
 @app.route('/sales')
 def sales():
@@ -60,8 +72,42 @@ def register():
         flash('Registrering fejlede.')
     return redirect(url_for('members'))
 
-@app.post('/member/delete/<member_id>')
+@app.get('/member/<member_id>')
+def member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/create_member')
+def create_member():
+    return render_template('create_member.html', RegistrationForm=RegistrationForm())
+
+@app.get('/edit_member/<member_id>')
+def edit_member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/authorize_member/<member_id>')
+def authorize_member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('authorize_member.html', member=member)
+
+@app.get('/delete_member/<member_id>')
 def delete_member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/member_history/<member_id>')
+def member_history(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/shared_account/<member_id>')
+def shared_account(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.post('/member/delete/<member_id>')
+def delete_member_old(member_id):
     member = db.session.get(Member, member_id)
     if member:
         try:

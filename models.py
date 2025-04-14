@@ -28,3 +28,13 @@ class Transaction(db.Model):
     deposit = db.Column(db.Integer, nullable=False, default=0)
     pay = db.Column(db.Integer, nullable=False, default=0)
     timestamp = db.Column(db.DateTime, default=func.now(), nullable=False)
+
+class SharedAccount(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    member_a = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
+    member_b = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
+
+class Privilege(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sharer = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
+    user = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)

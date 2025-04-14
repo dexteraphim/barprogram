@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block dependencies %}
+    <link rel="stylesheet" href="{{url_for('static', filename='members.css')}}">
+{% endblock %}
+{% block content %}
+<h1>Opret medlem</h1>
+<form method="POST" class ="registration" action="/register">
+    {{ RegistrationForm.hidden_tag() }}
+    <div class="form-field">
+        {{ RegistrationForm.id.label }}
+        {{ RegistrationForm.id(autofocus=True) }}
+        {% if RegistrationForm.id.errors %}
+        {% endif %}
+    </div>
+    <div class="form-field">
+        {{ RegistrationForm.nickname.label }}
+        {{ RegistrationForm.nickname }}
+        {% if RegistrationForm.nickname.errors %}
+        {% endif %}
+    </div>
+    <div class="form-field">
+        {{ RegistrationForm.submit(class="submit-button")}}
+    </div>
+</form>
+{% endblock %}

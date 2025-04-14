@@ -1,35 +1,18 @@
 {% extends 'layout.html' %}
+{% block dependencies %}
+    <link rel="stylesheet" href="{{url_for('static', filename='members.css')}}">
+{% endblock %}
 {% block content %}
     <h1>Medlemsliste</h1>
-    <ul>
+    <a class="btn" href="{{url_for('create_member')}}">Opret medlem</a>
+    <section class="memberlist">
         {% for member in members %}
-            <li><strong>{{member.id}}</strong> {{member.nickname}}</li><form method="POST" action="/member/delete/{{member.id}}"><input type="submit" value="Slet"> {{member.balance}} kr</form>
-
+        <a class="member" href="{{url_for('member', member_id=member.id)}}">
+            <p>{{member.id}}</p>
+            <p>{{member.nickname}}</p>
+            <p>{{member.balance}} kr</p>   
+        </a>
         {% endfor %}
+    </section>
     </ul>
-    <h3>Opret Medlem</h3>
-    <form method="POST" action="/register">
-        {{ RegistrationForm.hidden_tag() }}
-        <div class="form-field">
-            {{ RegistrationForm.id.label }}
-            {{ RegistrationForm.id(autofocus=True) }}
-            {% if RegistrationForm.id.errors %}
-            <ul class="form-errors">
-                {% for error in RegistrationForm.id.errors %} <li>{{ error }}</li> {% endfor %} 
-            </ul>
-            {% endif %}
-        </div>
-        <div class="form-field">
-            {{ RegistrationForm.nickname.label }}
-            {{ RegistrationForm.nickname }}
-            {% if RegistrationForm.nickname.errors %}
-            <ul class="form-errors">
-                {% for error in RegistrationForm.nickname.errors %} <li>{{ error }}</li> {% endfor %} 
-            </ul>
-            {% endif %}
-        </div>
-        <div class="form-field">
-            {{ RegistrationForm.submit(class="submit-button")}}
-        </div>
-    </form>
 {% endblock %}
