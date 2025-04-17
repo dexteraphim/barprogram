@@ -1,7 +1,7 @@
 import webview
 import threading
 import os
-from flask import Flask, render_template, url_for, redirect, flash, jsonify
+from flask import Flask, render_template, url_for, redirect, flash, jsonify, request
 from flask_babel import Babel, format_datetime
 from extensions import db
 from models import Member, Transaction
@@ -22,15 +22,16 @@ with app.app_context():
 def start_flask():
     app.run(debug=False, port=5000)
 
-@app.route('/')
+### Routes
+@app.get('/')
 def index():
     return redirect('/transactions')
 
-@app.route('/transactions')
+@app.get('/transactions')
 def transactions():
     return render_template('transactions.html', TransactionForm=TransactionForm())
 
-@app.route('/transactions/<member_id>')
+@app.get('/transactions/<member_id>')
 def member_transaction(member_id):
     member = db.session.get(Member, member_id)
     form = TransactionForm()
@@ -38,91 +39,8 @@ def member_transaction(member_id):
         form.member.data = member
     return render_template('transactions.html', TransactionForm=form, member=member)
 
-@app.route('/members')
-def members():
-    members = Member.query.all()
-    return render_template('members.html', members=members)
-
-@app.route('/sales')
-def sales():
-    transactions = Transaction.query.order_by(Transaction.timestamp.desc()).all()
-    return render_template('sales.html', transactions=transactions)
-
-@app.route('/settings')
-def settings():
-    return render_template('settings.html')
-    
-# FORMULARER
-@app.post('/register')
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        new_member = Member(id=form.id.data, nickname=form.nickname.data, authorized=False) 
-        try:
-            db.session.add(new_member)
-            db.session.commit()
-            print('Ny bruger oprettet')
-            flash(f'Ny bruger oprettet for {form.nickname.data}', 'success')
-        except Exception as e:
-            db.session.rollback()
-            print('Fejl ved oprettelse')
-            flash(f'Der var en fejl med at oprette brugeren.\n{e}', 'error')
-    else:
-        print('Fejl i registrering')
-        flash('Registrering fejlede.')
-    return redirect(url_for('members'))
-
-@app.get('/member/<member_id>')
-def member(member_id):
-    member = db.session.get(Member, member_id)
-    return render_template('member.html', member=member)
-
-@app.get('/create_member')
-def create_member():
-    return render_template('create_member.html', RegistrationForm=RegistrationForm())
-
-@app.get('/edit_member/<member_id>')
-def edit_member(member_id):
-    member = db.session.get(Member, member_id)
-    return render_template('member.html', member=member)
-
-@app.get('/authorize_member/<member_id>')
-def authorize_member(member_id):
-    member = db.session.get(Member, member_id)
-    return render_template('authorize_member.html', member=member)
-
-@app.get('/delete_member/<member_id>')
-def delete_member(member_id):
-    member = db.session.get(Member, member_id)
-    return render_template('member.html', member=member)
-
-@app.get('/member_history/<member_id>')
-def member_history(member_id):
-    member = db.session.get(Member, member_id)
-    return render_template('member.html', member=member)
-
-@app.get('/shared_account/<member_id>')
-def shared_account(member_id):
-    member = db.session.get(Member, member_id)
-    return render_template('member.html', member=member)
-
-@app.post('/member/delete/<member_id>')
-def delete_member_old(member_id):
-    member = db.session.get(Member, member_id)
-    if member:
-        try:
-            db.session.delete(member)
-            db.session.commit()
-            print('Medlem slettet')
-        except Exception as e:
-            db.session.rollback()
-            print(f'Fejl i sletning af medlem: {e}')
-    else:
-        print(f'Medlemsnummer {member_id} blev ikke fundet i databasen.')
-    return redirect(url_for('members'))
-
 @app.post('/transaction')
-def transaction():
+def process_transaction():
     form = TransactionForm()
     if form.validate_on_submit():
         member = form.member.data
@@ -141,9 +59,53 @@ def transaction():
                 print(f'Fejl i transaktionen: {e}')
         else:
             print(f'Medlemsnummer {member.id} blev ikke fundet i databasen.')
-    return redirect(url_for('transactions'))
+    return redirect(url_for('member_transaction', member_id=member.id))
 
-@app.route('/member/<int:member_id>/balance')
+@app.get('/members')
+def members():
+    members = Member.query.all()
+    return render_template('members.html', members=members)
+
+@app.get('/sales')
+def sales():
+    transactions = Transaction.query.order_by(Transaction.timestamp.desc()).all()
+    return render_template('sales.html', transactions=transactions)
+
+@app.get('/settings')
+def settings():
+    return render_template('settings.html')
+
+### Member GET
+@app.get('/member/<member_id>')
+def member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/member/create')
+def create_member():
+    return render_template('create_member.html', RegistrationForm=RegistrationForm())
+
+@app.get('/member/<member_id>/edit')
+def get_edit_member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/member/<member_id>/authorize')
+def get_authorize_member(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('authorize_member.html', member=member)
+
+@app.get('/member/<member_id>/history')
+def member_history(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/member/<member_id>/shared')
+def get_shared_account(member_id):
+    member = db.session.get(Member, member_id)
+    return render_template('member.html', member=member)
+
+@app.get('/member/<int:member_id>/balance')
 def get_member_balance(member_id):
     member = db.session.get(Member, member_id)
     if member:
@@ -151,6 +113,51 @@ def get_member_balance(member_id):
     else:
         return jsonify({'error': f'Medlemsnummer {member.id} blev ikke fundet i databasen.'}), 404
 
+### Member POST
+@app.post('/member/create')
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        new_member = Member(id=form.id.data, nickname=form.nickname.data, authorized=False) 
+        try:
+            db.session.add(new_member)
+            db.session.commit()
+            flash(f'Ny bruger oprettet for {form.nickname.data}', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Der var en fejl med at oprette medlemmet.\n{e}', 'error')
+    else:
+        flash('Registrering fejlede.')
+    return redirect(url_for('members'))
+
+@app.post('/member/<member_id>/delete')
+def delete_member(member_id):
+    member = db.session.get(Member, member_id)
+    if member:
+        try:
+            db.session.delete(member)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+    else:
+        flash(f'Medlemsnummer {member_id} blev ikke fundet i databasen.', 'error')
+    return redirect(request.referrer)
+
+@app.post('/member/<member_id>/deauthorize')
+def deauthorize_member(member_id):
+    member = db.session.get(Member, member_id)
+    if member:
+        try:
+            member.authorized = False
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Der var en fejl med at fjerne barvagt-rollen for medlemmet.\n{e}', 'error')
+    else:
+        flash(f'Medlemsnummer {member_id} blev ikke fundet i databasen.', 'error')
+    return redirect(request.referrer)
+
+### Start app
 if __name__ == '__main__':
     threading.Thread(target=start_flask, daemon=True).start()
     webview.create_window("Barprogram", "http://127.0.0.1:5000", width=640, height=780)

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
     <h1>Afregning</h1>
-    <form method="POST" action="{{ url_for('transaction') }}">
+    <form method="POST" action="{{ url_for('process_transaction') }}">
         {{ TransactionForm.hidden_tag() }}
 
         <div x-data="{

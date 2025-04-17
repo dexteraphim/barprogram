@@ -9,9 +9,9 @@
     <h1><strong>{{member.id}}</strong> {{member.nickname}}</h1>
     <p>{{member.balance}} kr</p>
     <a href="{{url_for('member_transaction', member_id=member.id)}}"><button>Afregn medlem</button></a>
-    <a href="{{url_for('edit_member', member_id=member.id)}}"><button>Rediger medlem</button></a>
-    <a href="{{url_for('member_history', member_id=member.id)}}"><button>Vis historik</button></a>
-    <a href="{{url_for('shared_account', member_id=member.id)}}"><button>Opret fælleskonto</button></a>
-    <a href="{{url_for('authorize_member', member_id=member.id)}}"><button>Gør til barvagt</button></a>
+    <a href="{{url_for('get_edit_member', member_id=member.id)}}"><button>Rediger medlem</button></a>
+    <a href="{{url_for('get_member_history', member_id=member.id)}}"><button>Vis historik</button></a>
+    <a href="{{url_for('get_shared_account', member_id=member.id)}}"><button>Opret fælleskonto</button></a>
+    <a href="{{url_for('get_authorize_member', member_id=member.id)}}"><button>Gør til barvagt</button></a>
     <a href="{{url_for('delete_member', member_id=member.id)}}"><button class="danger">Slet medlem</button></a>
     {% endblock %}
