@@ -32,8 +32,8 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
+    background-color: rgb(128, 172, 255);
     cursor: pointer;
-    filter: brightness(120%);
 }
 
 label, input, p {

@@ -6,6 +6,7 @@
     <title>Barprogram</title>
     <script src="{{url_for('static', filename='choices.js')}}"></script>
     <script src="{{url_for('static', filename='alpine.js')}}" defer></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='choices.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='layout.css')}}">
     {% block dependencies %}{% endblock %}
@@ -22,9 +23,6 @@
     <main>
         {% block content %}{% endblock %}
     </main>
-<footer>
-    <p>Copyright &copy; 2025 <a href="https://github.com/dexteraphim" target="_blank">Dexter</a></p>
-    <p>Alle rettigheder forbeholdes</p>
-</footer>
+
 </body>
 </html>

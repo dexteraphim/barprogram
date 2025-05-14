@@ -17,10 +17,7 @@ button {
     margin: 0.25rem;
     min-width: 20ch;
 }
-button:hover {
-    background-color: white;
-    cursor: pointer;
-}
+
 .danger {
     background: crimson;
     border: #eee;
@@ -28,6 +25,5 @@ button:hover {
 }
 
 button.danger:hover {
-    background: crimson;
-    filter: brightness(110%);
+    background: #ff2450;
 }

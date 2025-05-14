@@ -1,5 +1,6 @@
 * {
-    font-family: Cascadia Code;
+    font-family: 'Ubuntu Mono';
+    font-weight: 600;
 }
 
 a {
@@ -57,14 +58,41 @@ main {
     align-items: center;
     font-size: 1.25rem;
 }
-
+input {
+    font-size: 1.25rem;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid darkgray;
+    background: #eee;
+}
+button, .submit-button, #submit, input[type=submit] {
+    font-size: 1.25rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 0;
+    margin: 0.25rem;
+    min-width: 20ch;
+    background-color: cornflowerblue;
+    color: white;
+}
+button:hover, .submit-button:hover, #submit:hover {
+    background-color: #80adff;
+    cursor: pointer;
+}
+.form-field {
+    margin: 0.75rem;
+}
 h1 {
-    font-family: 'Darker Grotesque', sans-serif;
+    font-family: 'Nimbus Sans', sans-serif;
     font-weight: 300;
     font-size: 3rem;
     color: white;
 }
-
+h2 {
+    margin-bottom: 0;
+    margin-top: 1.25rem;
+}
 footer {
     box-sizing: border-box;
     width: 100%;

@@ -9,10 +9,9 @@
         {% for member in members %}
         <a class="member" href="{{url_for('member', member_id=member.id)}}">
             <p>{{member.id}}</p>
-            <p>{{member.nickname}}</p>
+            <p>{% if member.authorized %}👑 {% endif %}{{member.nickname}}</p>
             <p>{{member.balance}} kr</p>   
         </a>
         {% endfor %}
     </section>
-    </ul>
 {% endblock %}

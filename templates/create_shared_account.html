@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Opret fælleskonto</h1>
+<form method="POST" class="create_shared_account" action="/shared/create">
+    {{ CreateSharedAccountForm.hidden_tag() }}
+    <div class="form-field">
+        {{ CreateSharedAccountForm.member_a.label }} <br>
+        {{ CreateSharedAccountForm.member_a }}
+        {% if CreateSharedAccountForm.member_a.errors %}
+        {% endif %}
+    </div>
+    <div class="form-field">
+        {{ CreateSharedAccountForm.member_b.label }} <br>
+        {{ CreateSharedAccountForm.member_b(size=5) }}
+        {% if CreateSharedAccountForm.member_b.errors %}
+        {% endif %}
+    </div>
+    <div class="form-field">
+        {{ CreateSharedAccountForm.submit(class="submit-button")}}
+    </div>
+</form>
+{% endblock %}

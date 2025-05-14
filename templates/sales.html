@@ -17,11 +17,11 @@
         <tbody>
             {% for transaction in transactions %}
                 <tr>
-                    <td>{{transaction.member.nickname}}</td>
+                    <td>{{transaction.member.id}} {{transaction.member.nickname}}</td>
                     <td>{{transaction.deposit}} kr</td>
                     <td>{{transaction.pay}} kr</td>
                     <td>{{format_datetime(transaction.timestamp, 'dd/MM HH:mm')}}</td>
-                    <td>---</td>
+                    <td>{{transaction.authorizer}}</td>
                 </tr>
             {% endfor %}
         </tbody>

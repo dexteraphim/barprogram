@@ -1,14 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
 <h1>Opret medlem</h1>
-<form method="POST" class ="registration" action="/register">
+<form method="POST" class="registration" action="/member/create">
     {{ RegistrationForm.hidden_tag() }}
     <div class="form-field">
-        {{ RegistrationForm.id.label }}
+        {{ RegistrationForm.id.label }} <br>
         {{ RegistrationForm.id(autofocus=True) }}
         {% if RegistrationForm.id.errors %}
         {% endif %}
     </div>
     <div class="form-field">
-        {{ RegistrationForm.nickname.label }}
+        {{ RegistrationForm.nickname.label }} <br>
         {{ RegistrationForm.nickname }}
         {% if RegistrationForm.nickname.errors %}
         {% endif %}
@@ -17,3 +19,4 @@
         {{ RegistrationForm.submit(class="submit-button")}}
     </div>
 </form>
+{% endblock %}

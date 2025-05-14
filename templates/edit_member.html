@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Ændr medlem</h1>
+<form method="POST" class="edit_member" action="/member/{{member.id}}/edit">
+    {{ EditMemberForm.hidden_tag() }}
+    <div class="form-field">
+        {{ EditMemberForm.id.label }} <br>
+        {{ EditMemberForm.id(autofocus=True, value=member.id) }}
+        {% if EditMemberForm.id.errors %}
+        {% endif %}
+    </div>
+    <div class="form-field">
+        {{ EditMemberForm.nickname.label }} <br>
+        {{ EditMemberForm.nickname(value=member.nickname) }}
+        {% if EditMemberForm.nickname.errors %}
+        {% endif %}
+    </div>
+    <div class="form-field">
+        {{ EditMemberForm.submit(class="submit-button")}}
+    </div>
+</form>
+{% endblock %}

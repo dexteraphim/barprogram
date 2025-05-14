@@ -5,13 +5,28 @@
 {% block dependencies %}
     <link rel="stylesheet" href="{{url_for('static', filename='member.css')}}">
 {% endblock %}
-    {% block content %}
+{% block content %}
     <h1><strong>{{member.id}}</strong> {{member.nickname}}</h1>
     <p>{{member.balance}} kr</p>
     <a href="{{url_for('member_transaction', member_id=member.id)}}"><button>Afregn medlem</button></a>
     <a href="{{url_for('get_edit_member', member_id=member.id)}}"><button>Rediger medlem</button></a>
-    <a href="{{url_for('get_member_history', member_id=member.id)}}"><button>Vis historik</button></a>
+    {% if member.shared %}
     <a href="{{url_for('get_shared_account', member_id=member.id)}}"><button>Opret fælleskonto</button></a>
-    <a href="{{url_for('get_authorize_member', member_id=member.id)}}"><button>Gør til barvagt</button></a>
-    <a href="{{url_for('delete_member', member_id=member.id)}}"><button class="danger">Slet medlem</button></a>
-    {% endblock %}
+    {% else %}
+    <form action="{{url_for('delete_shared_account', member_id=member.id)}}" method="POST">
+        <button type="submit">Slet fælleskonto</button>
+    </form>
+    {% endif %}
+    {% if member.authorized %}
+    <form action="{{url_for('deauthorize_member', member_id=member.id)}}" method="POST">
+        <button type="submit">Fjern som barvagt</button>
+    </form>
+    {% else %}
+    <form action="{{url_for('authorize_member', member_id=member.id)}}" method="POST">
+        <button type="submit">Gør til barvagt</button>
+    </form>
+    {% endif %}
+    <form action="{{url_for('delete_member', member_id=member.id)}}" method="POST" onsubmit="return confirm('Er du sikker på at du vil slette {{member.id}} {{member.nickname}}? Denne handling kan ikke fortrydes!')">
+        <button type="submit" class="danger">Slet medlem</button>
+    </form>
+{% endblock %}
