@@ -228,6 +228,51 @@ def create_shared_account():
         print('Validation error')
     return redirect(url_for('members'))
 
+@app.post('/member/<int:member_id>/shared/delete')
+def delete_shared_account(member_id):
+    """Delete shared account for a specific member"""
+    member = db.session.get(Member, member_id)
+    if not member:
+        flash(f'Medlemsnummer {member_id} blev ikke fundet i databasen.', 'error')
+        return redirect(url_for('members'))
+    
+    # Find shared account where this member is either member_a or member_b
+    shared_account = SharedAccount.query.filter(
+        (SharedAccount.member_a == member_id) | 
+        (SharedAccount.member_b == member_id)
+    ).first()
+    
+    if shared_account:
+        try:
+            # Get the other member in the shared account
+            other_member_id = shared_account.member_b if shared_account.member_a == member_id else shared_account.member_a
+            other_member = db.session.get(Member, other_member_id)
+            
+            # Split the shared balance between the two members
+            if other_member:
+                split_balance = shared_account.balance // 2
+                member.balance = split_balance
+                other_member.balance = split_balance
+            else:
+                # If other member doesn't exist, give all balance to current member
+                member.balance = shared_account.balance
+            
+            # Delete the shared account
+            db.session.delete(shared_account)
+            db.session.commit()
+            
+            flash(f'Fælleskonto slettet for {member.nickname}', 'success')
+            print(f'Shared account deleted for member {member_id}')
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Der var en fejl med at slette fælleskontoen.\n{e}', 'error')
+            print(f'Error deleting shared account: {e}')
+    else:
+        flash(f'Ingen fælleskonto fundet for {member.nickname}', 'warning')
+    
+    return redirect(url_for('member', member_id=member_id))
+
 # Authorization routes
 @app.route('/login', methods=['GET', 'POST'])
 def login():
